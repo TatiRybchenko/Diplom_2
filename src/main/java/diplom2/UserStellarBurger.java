@@ -23,12 +23,15 @@ public class UserStellarBurger {
     @Step("Генерация  значений (emailAddress, пароля, имени) для создания акаунта пользователя")
     public static UserStellarBurger getDataFaker(){
         Faker faker = new Faker(Locale.ENGLISH);
+        final String userEmailAddress = faker.internet().emailAddress();
+        final String userPassword = faker.code().ean8();
+        final String userName = faker.name().fullName();
 
-        Allure.addAttachment("emailAddress пользователя: ", faker.internet().emailAddress());
-        Allure.addAttachment("Пароль пользователя:", faker.code().ean8());
-        Allure.addAttachment("Имя пользователя", faker.name().fullName());
+        Allure.addAttachment("emailAddress пользователя: ", userEmailAddress);
+        Allure.addAttachment("Пароль пользователя:", userPassword);
+        Allure.addAttachment("Имя пользователя", userName);
 
-        return new UserStellarBurger(faker.internet().emailAddress(), faker.code().ean8(), faker.name().fullName());
+        return new UserStellarBurger(userEmailAddress, userPassword, userName);
     }
 
 }
