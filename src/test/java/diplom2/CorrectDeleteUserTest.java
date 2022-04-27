@@ -1,19 +1,16 @@
 package diplom2;
 
-
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
 import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CorrectDeleteUserTest {
-
     private UserClient userClient;
     private User user;
 
@@ -21,8 +18,7 @@ public class CorrectDeleteUserTest {
     public void setUp() {
         userClient = new UserClient();
         user = User.getDataFaker();
-        userClient.createUser(user);
-                   }
+        userClient.createUser(user);                   }
 
     @Test
     @DisplayName("Выполнение запроса на удаление пользователя с корректными значениями")

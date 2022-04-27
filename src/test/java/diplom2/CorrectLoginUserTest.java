@@ -1,12 +1,10 @@
 package diplom2;
 
-
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
 import org.junit.Test;
-
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -23,8 +21,7 @@ public class CorrectLoginUserTest {
     public void setUp() {
         userClient = new UserClient();
         user = User.getDataFaker();
-        userClient.createUser(user);
-    }
+        userClient.createUser(user);     }
 
     @Test
     @DisplayName("Выполнение запроса на выполнение логина пользователя с корректными значениями")

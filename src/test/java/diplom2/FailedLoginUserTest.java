@@ -22,11 +22,9 @@ public class FailedLoginUserTest {
     @DisplayName("Выполнение логина пользователя с некорректными значениями, нет email")
     @Description("Выполнение логина пользователя с некорректными значениями. Отсутствует параметр для входа: email")
     public void userFailedLoginCredentialsNoLogin() {
-
         User user = User.builder()
                 .password(User.getDataFaker().getPassword())
                 .build();
-
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         int statusCode = loginResponse.extract().statusCode();
         String errorMessage = loginResponse.extract().path("message");
@@ -39,11 +37,9 @@ public class FailedLoginUserTest {
     @DisplayName("Выполнение логина пользователя с некорректными значениями, нет пароля")
     @Description("Выполнение логина пользователя с некорректными значениями. Отсутствует параметр для входа: пароль")
     public void userFailedLoginCredentialsNoPassword() {
-
         User user= User.builder()
                 .email(User.getDataFaker().getEmail())
                 .build();
-
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         int statusCode = loginResponse.extract().statusCode();
         String errorMessage = loginResponse.extract().path("message");
@@ -56,7 +52,6 @@ public class FailedLoginUserTest {
     @DisplayName("Выполнение логина пользователя с некорректными значениями: несуществующий логин и несуществующий пароль")
     @Description("Выполнение логина пользователя с некорректными значениями. Отсутствует параметр для входа: пароль, логин")
     public void userFailedLoginCredentialsNoPasswordNoLogin() {
-
         User user = User.builder()
                 .password(User.getDataFaker().getPassword())
                 .email(User.getDataFaker().getEmail())

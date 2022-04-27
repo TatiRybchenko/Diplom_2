@@ -25,7 +25,6 @@ public class FailedCreateUserTest {
         final String EMAIL = "test-data@yandex.ru";
         final String USERPASSWORD = "password";
         final String USERNAME = "Username";
-
         User userStellarBurger = User.builder()
                 .email(EMAIL)
                 .password(USERPASSWORD)

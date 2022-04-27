@@ -30,10 +30,8 @@ public class CorrectCreateUserTest {
         final String expectedBodyName = user.getName();
 
         ValidatableResponse createResponse = userClient.createUser(user);
-
         int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
-
         String bodyEmail = createResponse.extract().jsonPath().getString("user.email");
         String bodyName = createResponse.extract().jsonPath().getString("user.name");
         String bodyAccessToken = createResponse.extract().jsonPath().getString("accessToken");
