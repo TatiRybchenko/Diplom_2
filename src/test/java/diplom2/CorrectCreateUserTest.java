@@ -11,25 +11,25 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CorrectCreateUserStellarBurgerTest {
+public class CorrectCreateUserTest {
 
-    private UserStellarBurgerClient userStellarBurgerClient;
-    private UserStellarBurger userStellarBurger;
+    private UserClient userClient;
+    private User user;
 
     @Before
     public void setUp() {
-        userStellarBurgerClient = new UserStellarBurgerClient();
-        userStellarBurger = UserStellarBurger.getDataFaker();
+        userClient = new UserClient();
+        user = User.getDataFaker();
     }
 
     @Test
     @DisplayName("Создание пользователя с валидными значениями в параметрах: почта, пароль, имя.")
     @Description("Создание пользователя с валидными значениями (почта, пароль, имя). Корректные значения генерируются рандомно.")
     public void userCanCreateWithValidCredentials() {
-        final String expectedBodyEmail = userStellarBurger.getEmail();
-        final String expectedBodyName = userStellarBurger.getName();
+        final String expectedBodyEmail = user.getEmail();
+        final String expectedBodyName = user.getName();
 
-        ValidatableResponse createResponse = userStellarBurgerClient.createUserStellarBurger(userStellarBurger);
+        ValidatableResponse createResponse = userClient.createUser(user);
 
         int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");

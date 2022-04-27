@@ -9,13 +9,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
-public class FailedLoginUserStellarBurgerTest {
+public class FailedLoginUserTest {
 
-    private UserStellarBurgerClient userStellarBurgerClient;
+    private UserClient userClient;
 
     @Before
     public void setUp() {
-        userStellarBurgerClient = new UserStellarBurgerClient();
+        userClient = new UserClient();
     }
 
     @Test
@@ -23,11 +23,11 @@ public class FailedLoginUserStellarBurgerTest {
     @Description("Выполнение логина пользователя с некорректными значениями. Отсутствует параметр для входа: email")
     public void userFailedLoginCredentialsNoLogin() {
 
-        UserStellarBurger userStellarBurger = UserStellarBurger.builder()
-                .password(UserStellarBurger.getDataFaker().getPassword())
+        User user = User.builder()
+                .password(User.getDataFaker().getPassword())
                 .build();
 
-        ValidatableResponse loginResponse = userStellarBurgerClient.login(UserStellarBurgerCredentials.from(userStellarBurger));
+        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         int statusCode = loginResponse.extract().statusCode();
         String errorMessage = loginResponse.extract().path("message");
 
@@ -40,11 +40,11 @@ public class FailedLoginUserStellarBurgerTest {
     @Description("Выполнение логина пользователя с некорректными значениями. Отсутствует параметр для входа: пароль")
     public void userFailedLoginCredentialsNoPassword() {
 
-        UserStellarBurger userStellarBurger = UserStellarBurger.builder()
-                .email(UserStellarBurger.getDataFaker().getEmail())
+        User user= User.builder()
+                .email(User.getDataFaker().getEmail())
                 .build();
 
-        ValidatableResponse loginResponse = userStellarBurgerClient.login(UserStellarBurgerCredentials.from(userStellarBurger));
+        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         int statusCode = loginResponse.extract().statusCode();
         String errorMessage = loginResponse.extract().path("message");
 
@@ -57,12 +57,12 @@ public class FailedLoginUserStellarBurgerTest {
     @Description("Выполнение логина пользователя с некорректными значениями. Отсутствует параметр для входа: пароль, логин")
     public void userFailedLoginCredentialsNoPasswordNoLogin() {
 
-        UserStellarBurger userStellarBurger = UserStellarBurger.builder()
-                .password(UserStellarBurger.getDataFaker().getPassword())
-                .email(UserStellarBurger.getDataFaker().getEmail())
+        User user = User.builder()
+                .password(User.getDataFaker().getPassword())
+                .email(User.getDataFaker().getEmail())
                 .build();
 
-        ValidatableResponse loginResponse = userStellarBurgerClient.login(UserStellarBurgerCredentials.from(userStellarBurger));
+        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         int statusCode = loginResponse.extract().statusCode();
         String errorMessage = loginResponse.extract().path("message");
 

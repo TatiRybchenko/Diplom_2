@@ -5,21 +5,20 @@ import io.restassured.response.ValidatableResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import static diplom2.EndPoints.USER_CREATE;
-import static diplom2.EndPoints.USER_LOGIN;
+import static diplom2.EndPoints.*;
 import static diplom2.StellarBurgerRestClient.getBaseSpec;
 import static io.restassured.RestAssured.given;
 
 
-public class UserStellarBurgerClient {
+public class UserClient {
 
     @Step("Выполнение запроса на создание пользователя со всеми параметрами: имя, логин, пароль.")
-    public ValidatableResponse createUserStellarBurger(UserStellarBurger userStellarBurger) {
+    public ValidatableResponse createUser(User user) {
 
         Map<String,String> requestBodyUserCreate = new HashMap<>();
-        requestBodyUserCreate.put("email", userStellarBurger.getEmail());
-        requestBodyUserCreate.put("password", userStellarBurger.getPassword());
-        requestBodyUserCreate.put("name", userStellarBurger.getName());
+        requestBodyUserCreate.put("email", user.getEmail());
+        requestBodyUserCreate.put("password", user.getPassword());
+        requestBodyUserCreate.put("name", user.getName());
 
         return given()
                 .spec(getBaseSpec())
@@ -30,11 +29,11 @@ public class UserStellarBurgerClient {
     }
 
     @Step("Выполнение запроса на создание пользователя, у которого отсутствует один из параметров: емейл")
-    public ValidatableResponse createFailedUserNoEmailAddress(UserStellarBurger userStellarBurger) {
+    public ValidatableResponse createFailedUserNoEmailAddress(User user) {
 
         Map<String,String> requestBodyUserCreate = new HashMap<>();
-        requestBodyUserCreate.put("password", userStellarBurger.getPassword());
-        requestBodyUserCreate.put("name", userStellarBurger.getName());
+        requestBodyUserCreate.put("password", user.getPassword());
+        requestBodyUserCreate.put("name", user.getName());
 
         return given()
                 .spec(getBaseSpec())
@@ -45,11 +44,11 @@ public class UserStellarBurgerClient {
     }
 
     @Step("Выполнение запроса на создание пользователя, у которого отсутствует один из параметров: пароль")
-    public ValidatableResponse createFailedUserNoPassword(UserStellarBurger userStellarBurger) {
+    public ValidatableResponse createFailedUserNoPassword(User user) {
 
         Map<String,String> requestBodyUserCreate = new HashMap<>();
-        requestBodyUserCreate.put("email", userStellarBurger.getEmail());
-        requestBodyUserCreate.put("name", userStellarBurger.getName());
+        requestBodyUserCreate.put("email", user.getEmail());
+        requestBodyUserCreate.put("name", user.getName());
 
         return given()
                 .spec(getBaseSpec())
@@ -60,11 +59,11 @@ public class UserStellarBurgerClient {
     }
 
     @Step("Выполнение запроса на создание пользователя, у которого отсутствует один из параметров: имя")
-    public ValidatableResponse createFailedUserNoName(UserStellarBurger userStellarBurger) {
+    public ValidatableResponse createFailedUserNoName(User user) {
 
         Map<String,String> requestBodyUserCreate = new HashMap<>();
-        requestBodyUserCreate.put("email", userStellarBurger.getEmail());
-        requestBodyUserCreate.put("password", userStellarBurger.getPassword());
+        requestBodyUserCreate.put("email", user.getEmail());
+        requestBodyUserCreate.put("password", user.getPassword());
 
         return given()
                 .spec(getBaseSpec())
@@ -75,12 +74,22 @@ public class UserStellarBurgerClient {
     }
 
     @Step("Выполнение запроса логина пользователя, логин {credentials.email} и пароль {credentials.password}")
-    public  ValidatableResponse login(UserStellarBurgerCredentials credentials){
+    public  ValidatableResponse loginUser(UserCredentials credentials){
         return given()
                 .spec(getBaseSpec())
                 .body(credentials)
                 .when()
                 .post(USER_LOGIN)
+                .then();
+    }
+
+    @Step("Выполнение запроса на удаление пользователя c авторизацией ")
+    public ValidatableResponse deleteUser(String accessToken) {
+        return given()
+                .spec(getBaseSpec())
+                .auth().oauth2(accessToken)
+                .when()
+                .delete(USER_AUTH)
                 .then();
     }
 }

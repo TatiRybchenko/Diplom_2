@@ -14,26 +14,26 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CorrectLoginUserStellarBurgerTest {
-    private UserStellarBurgerClient userStellarBurgerClient;
-    private UserStellarBurger userStellarBurger;
+public class CorrectLoginUserTest {
+    private UserClient userClient;
+    private User user;
 
 
     @Before
     public void setUp() {
-        userStellarBurgerClient = new UserStellarBurgerClient();
-        userStellarBurger = UserStellarBurger.getDataFaker();
-        userStellarBurgerClient.createUserStellarBurger(userStellarBurger);
+        userClient = new UserClient();
+        user = User.getDataFaker();
+        userClient.createUser(user);
     }
 
     @Test
     @DisplayName("Выполнение запроса на выполнение логина пользователя с корректными значениями")
     @Description("Выполнение запроса на выполнение логина пользователя с корректными значениями. Корректные значения для создания и входа генерируется рандомно.")
     public void userCanLoginWithValidCredentials() {
-        final String expectedBodyEmail = userStellarBurger.getEmail();
-        final String expectedBodyName = userStellarBurger.getName();
+        final String expectedBodyEmail = user.getEmail();
+        final String expectedBodyName = user.getName();
 
-        ValidatableResponse loginResponse = userStellarBurgerClient.login(UserStellarBurgerCredentials.from(userStellarBurger));
+        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         int statusCode = loginResponse.extract().statusCode();
         boolean userSuccess = loginResponse.extract().jsonPath().getBoolean("success");
         String bodyEmail = loginResponse.extract().jsonPath().getString("user.email");

@@ -22,5 +22,6 @@ public class StellarBurgerRestClient {
                 .setBaseUri(BASE_URL)
                 .build();
     }
+
 }
 

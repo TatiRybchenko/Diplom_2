@@ -9,13 +9,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
-public class FailedCreateUserStellarBurgerTest {
-    private UserStellarBurgerClient userStellarBurgerClient;
-    private UserStellarBurger userStellarBurger;
+public class FailedCreateUserTest {
+    private UserClient userClient;
+    private User user;
 
     @Before
     public void setUp() {
-        userStellarBurgerClient = new UserStellarBurgerClient();
+        userClient = new UserClient();
           }
 
     @Test
@@ -26,13 +26,13 @@ public class FailedCreateUserStellarBurgerTest {
         final String USERPASSWORD = "password";
         final String USERNAME = "Username";
 
-        UserStellarBurger userStellarBurger = UserStellarBurger.builder()
+        User userStellarBurger = User.builder()
                 .email(EMAIL)
                 .password(USERPASSWORD)
                 .name(USERNAME)
                 .build();
 
-        ValidatableResponse createResponse = userStellarBurgerClient.createUserStellarBurger(userStellarBurger);
+        ValidatableResponse createResponse = userClient.createUser(userStellarBurger);
         int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
@@ -46,9 +46,9 @@ public class FailedCreateUserStellarBurgerTest {
     @DisplayName("Создание пользователя, у которого отсутствует один из передаваемых параметров для создания: емейл")
     @Description("При создание пользователя отсутствует параметр емейл, данные генерируются рандомно.")
     public void userFailedCredentialsNoAccountsEmail() {
-        userStellarBurger = UserStellarBurger.getDataFaker();
+        user = User.getDataFaker();
 
-        ValidatableResponse createResponse = userStellarBurgerClient.createFailedUserNoEmailAddress(userStellarBurger);
+        ValidatableResponse createResponse = userClient.createFailedUserNoEmailAddress(user);
         int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
@@ -62,9 +62,9 @@ public class FailedCreateUserStellarBurgerTest {
     @DisplayName("Создание пользователя, у которого отсутствует один из передаваемых параметров для создания: пароль")
     @Description("При создание пользователя отсутствует параметр пароль, данные генерируются рандомно.")
     public void userFailedCredentialsNoAccountsPassword() {
-        userStellarBurger = UserStellarBurger.getDataFaker();
+        user = User.getDataFaker();
 
-        ValidatableResponse createResponse = userStellarBurgerClient.createFailedUserNoPassword(userStellarBurger);
+        ValidatableResponse createResponse = userClient.createFailedUserNoPassword(user);
         int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
@@ -78,9 +78,9 @@ public class FailedCreateUserStellarBurgerTest {
     @DisplayName("Создание пользователя, у которого отсутствует один из передаваемых параметров для создания: имя")
     @Description("При создание пользователя отсутствует параметр имя, данные генерируются рандомно.")
     public void userFailedCredentialsNoAccountsName() {
-        userStellarBurger = UserStellarBurger.getDataFaker();
+        user = User.getDataFaker();
 
-        ValidatableResponse createResponse = userStellarBurgerClient.createFailedUserNoName(userStellarBurger);
+        ValidatableResponse createResponse = userClient.createFailedUserNoName(user);
         int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
