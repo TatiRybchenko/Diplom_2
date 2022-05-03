@@ -22,21 +22,21 @@ public class FailedCreateUserTest {
     @DisplayName("Создание пользователя,который уже зарегистрирован")
     @Description("Создание пользователя,который уже зарегистрирован: данные для создания пользователя постоянные")
     public void userFailedCredentialExistEmailPasswordName() {
-        final String EMAIL = "test-data@yandex.ru";
-        final String USERPASSWORD = "password";
-        final String USERNAME = "Username";
-        User userStellarBurger = User.builder()
-                .email(EMAIL)
-                .password(USERPASSWORD)
-                .name(USERNAME)
-                .build();
+        //   final String EMAIL = "test-data@yandex.ru";
+        //   final String USERPASSWORD = "password";
+        //   final String USERNAME = "Username";
+        //   User userStellarBurger = User.builder()
+        //        .email(EMAIL)
+        //          .password(USERPASSWORD)
+        //       .name(USERNAME)
+        //       .build();
 
-        ValidatableResponse createResponse = userClient.createUser(userStellarBurger);
-        int statusCode = createResponse.extract().statusCode();
+        ValidatableResponse createResponse = userClient.createUserExist(user);
+      //  int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
 
-        assertThat("Создание пользователя не выполнилось, статус код:", statusCode, equalTo(403));
+       // assertThat("Создание пользователя не выполнилось, статус код:", statusCode, equalTo(403));
         assertFalse("Корреткное сообщение о завершение создания пользователя Success", userSuccess);
         assertEquals("User already exists", errorMessage);
     }
@@ -48,11 +48,11 @@ public class FailedCreateUserTest {
         user = User.getDataFaker();
 
         ValidatableResponse createResponse = userClient.createFailedUserNoEmailAddress(user);
-        int statusCode = createResponse.extract().statusCode();
+      //  int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
 
-        assertThat("Создание пользователя не выполнилось, статус код:",statusCode,equalTo(403));
+       // assertThat("Создание пользователя не выполнилось, статус код:",statusCode,equalTo(403));
         assertFalse("Корреткное сообщение о завершение создания пользователя Success", userSuccess);
         assertEquals("Email, password and name are required fields", errorMessage);
     }
@@ -64,11 +64,11 @@ public class FailedCreateUserTest {
         user = User.getDataFaker();
 
         ValidatableResponse createResponse = userClient.createFailedUserNoPassword(user);
-        int statusCode = createResponse.extract().statusCode();
+      //  int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
 
-        assertThat("Создание пользователя не выполнилось, статус код:",statusCode,equalTo(403));
+        // assertThat("Создание пользователя не выполнилось, статус код:",statusCode,equalTo(403));
         assertFalse("Корреткное сообщение о завершение создания пользователя Success", userSuccess);
         assertEquals("Email, password and name are required fields", errorMessage);
     }
@@ -80,11 +80,11 @@ public class FailedCreateUserTest {
         user = User.getDataFaker();
 
         ValidatableResponse createResponse = userClient.createFailedUserNoName(user);
-        int statusCode = createResponse.extract().statusCode();
+       // int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
 
-        assertThat("Создание пользователя не выполнилось, статус код:",statusCode,equalTo(403));
+       // assertThat("Создание пользователя не выполнилось, статус код:",statusCode,equalTo(403));
         assertFalse("Корреткное сообщение о завершение создания пользователя Success", userSuccess);
         assertEquals("Email, password and name are required fields", errorMessage);
     }

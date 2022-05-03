@@ -2,12 +2,15 @@ package diplom2;
 
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
 import static diplom2.EndPoints.*;
 import static diplom2.StellarBurgerRestClient.getBaseSpec;
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_OK;
 
 
 public class UserClient {
@@ -25,7 +28,25 @@ public class UserClient {
                 .body(requestBodyUserCreate)
                 .when()
                 .post(USER_CREATE)
-                .then();
+                .then()
+                .statusCode(SC_OK);
+    }
+
+    @Step("Выполнение запроса на создание пользователя, который существует со всеми параметрами: имя, логин, пароль.")
+    public ValidatableResponse createUserExist(User user) {
+
+        Map<String,String> requestBodyUserCreate = new HashMap<>();
+        requestBodyUserCreate.put("email", "test-data@yandex.ru");
+        requestBodyUserCreate.put("password", "password");
+        requestBodyUserCreate.put("name", "Username");
+
+        return given()
+                .spec(getBaseSpec())
+                .body(requestBodyUserCreate)
+                .when()
+                .post(USER_CREATE)
+                .then()
+                .statusCode(403);
     }
 
     @Step("Выполнение запроса на создание пользователя, у которого отсутствует один из параметров: емейл")
@@ -40,7 +61,8 @@ public class UserClient {
                 .body(requestBodyUserCreate)
                 .when()
                 .post(USER_CREATE)
-                .then();
+                .then()
+                .statusCode(403);
     }
 
     @Step("Выполнение запроса на создание пользователя, у которого отсутствует один из параметров: пароль")
@@ -55,7 +77,8 @@ public class UserClient {
                 .body(requestBodyUserCreate)
                 .when()
                 .post(USER_CREATE)
-                .then();
+                .then()
+                .statusCode(403);
     }
 
     @Step("Выполнение запроса на создание пользователя, у которого отсутствует один из параметров: имя")
@@ -70,7 +93,8 @@ public class UserClient {
                 .body(requestBodyUserCreate)
                 .when()
                 .post(USER_CREATE)
-                .then();
+                .then()
+                .statusCode(403);
     }
 
     @Step("Выполнение запроса логина пользователя, логин {credentials.email} и пароль {credentials.password}")
@@ -80,16 +104,66 @@ public class UserClient {
                 .body(credentials)
                 .when()
                 .post(USER_LOGIN)
-                .then();
+                .then()
+                .statusCode(SC_OK);
     }
 
-    @Step("Выполнение запроса на удаление пользователя c авторизацией ")
+    @Step("Выполнение запроса на удаление пользователя c авторизацией")
     public ValidatableResponse deleteUser(String accessToken) {
         return given()
                 .spec(getBaseSpec())
                 .auth().oauth2(accessToken)
                 .when()
-                .delete(USER_AUTH)
+                .delete(USER)
+                .then()
+                .statusCode(202);
+    }
+
+    @Step("Выполнение запроса на получение данных о пользователе c авторизацией")
+    public ValidatableResponse editUserAuth(String accessToken, User user) {
+
+        Map<String,String> requestBodyUserEdit = new HashMap<>();
+        requestBodyUserEdit.put("email", user.getEmail());
+        requestBodyUserEdit.put("name", user.getName());
+
+        return given()
+                .spec(getBaseSpec())
+                .auth().oauth2(accessToken)
+                .body(requestBodyUserEdit)
+                .when()
+                .patch(USER)
                 .then();
+    }
+    @Step("Выполнение запроса на получение данных о пользователе c авторизацией")
+    public ValidatableResponse editUserMailUsedAuth(String accessToken, User user) {
+
+        Map<String,String> requestBodyUserEdit = new HashMap<>();
+        requestBodyUserEdit.put("email","test-data@yandex.ru");
+        requestBodyUserEdit.put("name", user.getName());
+
+        return given()
+                .spec(getBaseSpec())
+                .auth().oauth2(accessToken)
+                .body(requestBodyUserEdit)
+                .when()
+                .patch(USER)
+                .then()
+                .statusCode(403);
+    }
+
+    @Step("Выполнение запроса на получение данных о пользователе БЕЗ авторизацией")
+    public ValidatableResponse editUserNoAuth(User user) {
+
+        Map<String,String> requestBodyUserEdit = new HashMap<>();
+        requestBodyUserEdit.put("email", user.getEmail());
+        requestBodyUserEdit.put("name", user.getName());
+
+        return given()
+                .spec(getBaseSpec())
+                .body(requestBodyUserEdit)
+                .when()
+                .patch(USER)
+                .then()
+                .statusCode(401);
     }
 }

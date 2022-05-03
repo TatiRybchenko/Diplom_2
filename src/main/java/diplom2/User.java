@@ -19,16 +19,16 @@ public class User {
         this.password = password;
         this.name = name;
 }
-    @Step("Генерация  значений (emailAddress, пароля, имени) для создания акаунта пользователя")
+    @Step("Генерация  значений (email адрес, пароля, имени) для создания акаунта пользователя")
     public static User getDataFaker(){
         Faker faker = new Faker(Locale.ENGLISH);
         final String userEmailAddress = faker.internet().emailAddress();
         final String userPassword = faker.code().ean8();
         final String userName = faker.name().fullName();
 
-        Allure.addAttachment("emailAddress пользователя: ", userEmailAddress);
+        Allure.addAttachment("email адрес пользователя:", userEmailAddress);
         Allure.addAttachment("Пароль пользователя:", userPassword);
-        Allure.addAttachment("Имя пользователя", userName);
+        Allure.addAttachment("Имя пользователя:", userName);
 
         return new User(userEmailAddress, userPassword, userName);
     }
