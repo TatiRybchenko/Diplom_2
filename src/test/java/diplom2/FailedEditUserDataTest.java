@@ -42,7 +42,7 @@ public class FailedEditUserDataTest {
 
     @Test
     @DisplayName("Редактирование данных пользователя.")
-    @Description("Редактирование данных пользователя. Без авторизации")
+    @Description("Редактирование данных пользователя. C авторизацией, email адрес уже используется")
     public void userFailedEditMailUsedAuth() {
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");

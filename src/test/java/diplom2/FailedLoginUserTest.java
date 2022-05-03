@@ -3,10 +3,8 @@ package diplom2;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 public class FailedLoginUserTest {
@@ -25,11 +23,8 @@ public class FailedLoginUserTest {
         User user = User.builder()
                 .password(User.getDataFaker().getPassword())
                 .build();
-        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
-        int statusCode = loginResponse.extract().statusCode();
+        ValidatableResponse loginResponse = userClient.loginUserNoValidCredentials(UserCredentials.from(user));
         String errorMessage = loginResponse.extract().path("message");
-
-        assertThat("Логин пользователя не выполнился, статус код:", statusCode, equalTo(401));
         assertEquals("email or password are incorrect", errorMessage);
     }
 
@@ -40,11 +35,9 @@ public class FailedLoginUserTest {
         User user= User.builder()
                 .email(User.getDataFaker().getEmail())
                 .build();
-        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
-        int statusCode = loginResponse.extract().statusCode();
+        ValidatableResponse loginResponse = userClient.loginUserNoValidCredentials(UserCredentials.from(user));
         String errorMessage = loginResponse.extract().path("message");
 
-        assertThat("Логин пользователя не выполнился, статус код:", statusCode, equalTo(401));
         assertEquals("email or password are incorrect", errorMessage);
     }
 
@@ -56,12 +49,9 @@ public class FailedLoginUserTest {
                 .password(User.getDataFaker().getPassword())
                 .email(User.getDataFaker().getEmail())
                 .build();
-
-        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
-        int statusCode = loginResponse.extract().statusCode();
+        ValidatableResponse loginResponse = userClient.loginUserNoValidCredentials(UserCredentials.from(user));
         String errorMessage = loginResponse.extract().path("message");
 
-        assertThat("Логин ользователя не выполнился, статус код:", statusCode, equalTo(401));
         assertEquals("email or password are incorrect", errorMessage);
     }
 

@@ -107,6 +107,16 @@ public class UserClient {
                 .then()
                 .statusCode(SC_OK);
     }
+    @Step("Выполнение запроса логина пользователя: нет одного из параметров, логин {credentials.email} и пароль {credentials.password}")
+    public  ValidatableResponse loginUserNoValidCredentials(UserCredentials credentials){
+        return given()
+                .spec(getBaseSpec())
+                .body(credentials)
+                .when()
+                .post(USER_LOGIN)
+                .then()
+                .statusCode(401);
+    }
 
     @Step("Выполнение запроса на удаление пользователя c авторизацией")
     public ValidatableResponse deleteUser(String accessToken) {
@@ -119,7 +129,7 @@ public class UserClient {
                 .statusCode(202);
     }
 
-    @Step("Выполнение запроса на получение данных о пользователе c авторизацией")
+    @Step("Выполнение запроса на получение и редактирование данных о пользователе c авторизацией {user.email} и {user.name}")
     public ValidatableResponse editUserAuth(String accessToken, User user) {
 
         Map<String,String> requestBodyUserEdit = new HashMap<>();
@@ -134,7 +144,7 @@ public class UserClient {
                 .patch(USER)
                 .then();
     }
-    @Step("Выполнение запроса на получение данных о пользователе c авторизацией")
+    @Step("Выполнение запроса на получение и редактирование данных о пользователе c авторизацией, {user.email} и {user.name}")
     public ValidatableResponse editUserMailUsedAuth(String accessToken, User user) {
 
         Map<String,String> requestBodyUserEdit = new HashMap<>();
@@ -151,7 +161,7 @@ public class UserClient {
                 .statusCode(403);
     }
 
-    @Step("Выполнение запроса на получение данных о пользователе БЕЗ авторизацией")
+    @Step("Выполнение запроса на получение и редактирование данных о пользователе БЕЗ авторизацией, {user.email} и {user.name}")
     public ValidatableResponse editUserNoAuth(User user) {
 
         Map<String,String> requestBodyUserEdit = new HashMap<>();

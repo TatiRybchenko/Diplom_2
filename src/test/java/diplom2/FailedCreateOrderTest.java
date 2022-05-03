@@ -7,8 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class FailedCreateOrderTest {
@@ -21,14 +19,12 @@ public class FailedCreateOrderTest {
         userClient = new UserClient();
         user = User.getDataFaker();
         userClient.createUser(user);
-        ordersClient = new OrdersClient();
-    }
+        ordersClient = new OrdersClient();     }
     @After
     public void tearDown(){
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
-        userClient.deleteUser(accessToken);
-    }
+        userClient.deleteUser(accessToken);     }
 
     @Test
     @DisplayName("Выполнение запроса на создание заказа с некорректными значениями")
@@ -39,12 +35,10 @@ public class FailedCreateOrderTest {
                 .build();
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
-        ValidatableResponse createResponse = ordersClient.createCorrectOrders(orders, accessToken);
-        int statusCode = createResponse.extract().statusCode();
+        ValidatableResponse createResponse = ordersClient.createFailedOrdersNoIngredients(orders, accessToken);
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         String errorMessage = createResponse.extract().path("message");
 
-        assertThat("Создание заказа не выполнилось, статус код:",statusCode,equalTo(400));
         assertFalse("Корреткное сообщение о завершение создания заказа Success", userSuccess);
         assertEquals("Ingredient ids must be provided", errorMessage);
     }
@@ -58,10 +52,8 @@ public class FailedCreateOrderTest {
                 .build();
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
-        ValidatableResponse createResponse = ordersClient.createCorrectOrders(orders, accessToken);
-        int statusCode = createResponse.extract().statusCode();
+        ValidatableResponse createResponse = ordersClient.createFailedOrdersNoValidHechIngredients(orders, accessToken);
 
-        assertThat("Создание заказа не выполнилось, статус код:",statusCode,equalTo(500));
     }
 
   }

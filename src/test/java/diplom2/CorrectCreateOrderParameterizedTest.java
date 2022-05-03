@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import java.util.List;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
@@ -40,15 +39,15 @@ public class CorrectCreateOrderParameterizedTest {
     public void setUp() {
         userClient = new UserClient();
         user = User.getDataFaker();
-        userClient.createUser(user);
         ordersClient = new OrdersClient();
-           }
+        userClient.createUser(user);
+
+    }
     @After
     public void tearDown(){
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
-        userClient.deleteUser(accessToken);
-    }
+        userClient.deleteUser(accessToken);    }
 
     @Test
     @DisplayName("Выполнение запроса на создание заказа с корректными значениями c авторизацией пользователя")
@@ -60,12 +59,10 @@ public class CorrectCreateOrderParameterizedTest {
         ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
         String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
         ValidatableResponse createResponse = ordersClient.createCorrectOrders(orders, accessToken);
-     //   int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         number = createResponse.extract().path("order.number");
         name = createResponse.extract().path("name");
 
-       // assertThat("Пользователь выполнил заказ, статус код:", statusCode, equalTo(200));
         assertThat("Номер заказа", number, is(not(0)));
         assertThat("Наименование заказа", name, notNullValue());
         assertTrue("Корреткное сообщение о создание пользовтаелем заказа Success", userSuccess);
@@ -79,12 +76,10 @@ public class CorrectCreateOrderParameterizedTest {
                 .ingredients(ordersIngredients)
                 .build();
         ValidatableResponse createResponse = ordersClient.createCorrectOrdersNoAuth(orders);
-      // int statusCode = createResponse.extract().statusCode();
         boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
         number = createResponse.extract().path("order.number");
         name = createResponse.extract().path("name");
 
-       //assertThat("Пользователь выполнил заказ, статус код:", statusCode, equalTo(200));
         assertThat("Номер заказа", number, is(not(0)));
         assertThat("Наименование заказа", name, notNullValue());
         assertTrue("Корреткное сообщение о создание пользовтаелем заказа Success", userSuccess);

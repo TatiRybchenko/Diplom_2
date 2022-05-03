@@ -20,10 +20,35 @@ public class OrdersClient {
                 .when()
                 .post(ORDERS)
                 .then()
+                .statusCode(SC_OK);
+    }
+    @Step("Выполнение запроса на создание заказа с ингредиентами:{orders.ingredients}")
+    public ValidatableResponse createFailedOrdersNoIngredients(Orders orders,String accessToken) {
+
+        return given()
+                .spec(getBaseSpec())
+                .auth().oauth2(accessToken)
+                .body(orders)
+                .when()
+                .post(ORDERS)
+                .then()
                 .statusCode(400);
     }
+    @Step("Выполнение запроса на создание заказа с ингредиентами:{orders.ingredients}")
+    public ValidatableResponse createFailedOrdersNoValidHechIngredients(Orders orders,String accessToken) {
 
-    @Step("Выполнение запроса на создание заказа без авторизации")
+        return given()
+                .spec(getBaseSpec())
+                .auth().oauth2(accessToken)
+                .body(orders)
+                .when()
+                .post(ORDERS)
+                .then()
+                .statusCode(500);
+    }
+
+
+    @Step("Выполнение запроса на создание заказа: БЕЗ авторизации")
     public ValidatableResponse createCorrectOrdersNoAuth(Orders orders) {
 
         return given()
@@ -35,14 +60,15 @@ public class OrdersClient {
                 .statusCode(SC_OK);
     }
 
-    @Step("Выполнение запроса на получение конкретного пользователя: без авторизации")
+    @Step("Выполнение запроса на получение конкретного пользователя: БЕЗ авторизации")
     public ValidatableResponse  orderListAllActiveNoAuth() {
 
         return given()
                 .spec(getBaseSpec())
                 .when()
                 .get(ORDERS)
-                .then();
+                .then()
+                .statusCode(401);
     }
 
     @Step("Выполнение запроса на получение конкретного пользователя: c авторизации")
@@ -53,6 +79,7 @@ public class OrdersClient {
                 .auth().oauth2(accessToken)
                 .when()
                 .get(ORDERS)
-                .then();
+                .then()
+                .statusCode(SC_OK);
     }
 }
