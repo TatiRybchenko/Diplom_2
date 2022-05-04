@@ -1,0 +1,88 @@
+package diplom2;
+
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
+import io.restassured.response.ValidatableResponse;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(Parameterized.class)
+public class CorrectCreateOrderParameterizedTest {
+    private  List<String> ordersIngredients;
+    private OrdersClient ordersClient;
+    private UserClient userClient;
+    private User user;
+    private int number;
+    private String name;
+
+    public CorrectCreateOrderParameterizedTest(List<String> ordersIngredients) {
+        this.ordersIngredients = ordersIngredients;
+    }
+
+    @Parameterized.Parameters
+    public static Object[][] getIngredients() {
+        return new Object[][] {
+                {List.of("61c0c5a71d1f82001bdaaa70")},
+                {List.of("61c0c5a71d1f82001bdaaa71","61c0c5a71d1f82001bdaaa6f")},
+                {List.of("61c0c5a71d1f82001bdaaa6d", "61c0c5a71d1f82001bdaaa6f","61c0c5a71d1f82001bdaaa75")},
+                        };
+    }
+
+    @Before
+    public void setUp() {
+        userClient = new UserClient();
+        user = User.getDataFaker();
+        ordersClient = new OrdersClient();
+        userClient.createUser(user);
+
+    }
+    @After
+    public void tearDown(){
+        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
+        String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
+        userClient.deleteUser(accessToken);    }
+
+    @Test
+    @DisplayName("Выполнение запроса на создание заказа с корректными значениями c авторизацией пользователя")
+    @Description("Выполнение запроса на создание заказа с корректными значениями c авторизацией пользователя. Корректные значения для создания заказа изменяется {ingredients}")
+    public void ordersCreateWithValidCredentialsAuth()     {
+        Orders orders = Orders.builder()
+                .ingredients(ordersIngredients)
+                .build();
+        ValidatableResponse loginResponse = userClient.loginUser(UserCredentials.from(user));
+        String accessToken = loginResponse.extract().jsonPath().get("accessToken").toString().replace("Bearer ","");
+        ValidatableResponse createResponse = ordersClient.createCorrectOrders(orders, accessToken);
+        boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
+        number = createResponse.extract().path("order.number");
+        name = createResponse.extract().path("name");
+
+        assertThat("Номер заказа", number, is(not(0)));
+        assertThat("Наименование заказа", name, notNullValue());
+        assertTrue("Корреткное сообщение о создание пользовтаелем заказа Success", userSuccess);
+    }
+
+    @Test
+    @DisplayName("Выполнение запроса на создание заказа с корректными значениями БЕЗ авторизации пользователя")
+    @Description("Выполнение запроса на создание заказа с корректными значениями БЕЗ авторизации пользователя. Корректные значения для создания заказа изменяется {ingredients}")
+    public void acceptFailedOrderWithCredentialsNoAuth()     {
+        Orders orders = Orders.builder()
+                .ingredients(ordersIngredients)
+                .build();
+        ValidatableResponse createResponse = ordersClient.createCorrectOrdersNoAuth(orders);
+        boolean userSuccess = createResponse.extract().jsonPath().getBoolean("success");
+        number = createResponse.extract().path("order.number");
+        name = createResponse.extract().path("name");
+
+        assertThat("Номер заказа", number, is(not(0)));
+        assertThat("Наименование заказа", name, notNullValue());
+        assertTrue("Корреткное сообщение о создание пользовтаелем заказа Success", userSuccess);
+    }
+
+}
